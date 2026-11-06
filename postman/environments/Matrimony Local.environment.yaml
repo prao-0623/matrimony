@@ -1,0 +1,17 @@
+name: Matrimony Local
+values:
+  - key: base_url
+    value: 'http://localhost:8000'
+    description: 'Base URL for local development'
+    enabled: true
+    type: default
+  - key: access_token
+    value: ''
+    description: 'JWT access token (set after login)'
+    enabled: true
+    type: default
+  - key: refresh_token
+    value: ''
+    description: 'JWT refresh token (set after login)'
+    enabled: true
+    type: default

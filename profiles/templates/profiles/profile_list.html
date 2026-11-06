@@ -1,0 +1,71 @@
+{% extends 'profiles/base.html' %}
+
+{% block title %}Profiles | Matrimony{% endblock %}
+
+{% block content %}
+    <div class="page-heading">
+        <div>
+            <p class="eyebrow">Staff workspace</p>
+            <h1>Profiles</h1>
+            <p class="subheading">Search, review, and update matrimonial profiles.</p>
+        </div>
+        <a class="button" href="{% url 'web-profile-add' %}">Add profile</a>
+    </div>
+    <section class="section" aria-label="Profile list">
+        <form class="toolbar" method="get">
+            <div class="search-control">
+                <label for="profile-search">Search profiles</label>
+                <input id="profile-search" type="search" name="q" value="{{ query }}" placeholder="Name, profile code, or language">
+            </div>
+            <div class="status-control">
+                <label for="profile-status">Status</label>
+                <select id="profile-status" name="status">
+                    <option value="">All statuses</option>
+                    {% for value, label in statuses %}
+                        <option value="{{ value }}" {% if selected_status == value %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button class="button small" type="submit">Apply filters</button>
+            {% if query or selected_status %}<a class="button secondary small" href="{% url 'web-profile-list' %}">Clear</a>{% endif %}
+        </form>
+        {% if page.object_list %}
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr><th>Profile</th><th>Profession</th><th>Gender</th><th>Marital status</th><th>Status</th><th>Added</th><th><span class="sr-only">Actions</span></th></tr>
+                    </thead>
+                    <tbody>
+                        {% for profile in page.object_list %}
+                            <tr>
+                                <td><a class="profile-name-link" href="{% url 'web-profile-detail' profile.pk %}"><span class="profile-name">{{ profile.full_name }}</span></a><br><span class="code">{{ profile.profile_code }}</span></td>
+                                <td>{{ profile.profession|default:"Not specified" }}</td>
+                                <td>{{ profile.get_gender_display|default:"Not specified" }}</td>
+                                <td>{{ profile.marital_status|default:"—" }}</td>
+                                <td><span class="status status-{{ profile.status|lower }}">{{ profile.get_status_display }}</span></td>
+                                <td>{{ profile.created_at|date:"M j, Y" }}</td>
+                                <td>
+                                    <a class="section-heading-link" href="{% url 'web-profile-detail' profile.pk %}">View</a>
+                                    <span class="link-divider">·</span>
+                                    <a class="section-heading-link" href="{% url 'web-profile-edit' profile.pk %}">Edit</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% if page.has_other_pages %}
+                <div class="pagination">
+                    <span>Page {{ page.number }} of {{ page.paginator.num_pages }}</span>
+                    <span>
+                        {% if page.has_previous %}<a href="?q={{ query|urlencode }}&status={{ selected_status|urlencode }}&page={{ page.previous_page_number }}">Previous</a>{% endif %}
+                        {% if page.has_previous and page.has_next %} · {% endif %}
+                        {% if page.has_next %}<a href="?q={{ query|urlencode }}&status={{ selected_status|urlencode }}&page={{ page.next_page_number }}">Next</a>{% endif %}
+                    </span>
+                </div>
+            {% endif %}
+        {% else %}
+            <p class="empty">No profiles match these filters.</p>
+        {% endif %}
+    </section>
+{% endblock %}

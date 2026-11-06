@@ -1,0 +1,16 @@
+$kind: http-request
+name: 'Create Profile'
+method: POST
+url: '{{base_url}}/api/profiles/'
+order: 2000
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "name": "Example Name",
+      "profession": "Engineer",
+      "mother_tongue": "Kannada"
+    }

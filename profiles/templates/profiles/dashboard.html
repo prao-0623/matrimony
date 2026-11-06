@@ -1,0 +1,60 @@
+{% extends 'profiles/base.html' %}
+
+{% block title %}Matrimony Dashboard{% endblock %}
+
+{% block content %}
+        <div class="page-heading">
+            <div>
+                <p class="eyebrow">Staff workspace</p>
+                <h1>Profile overview</h1>
+                <p class="subheading">Review and manage matrimonial profiles.</p>
+            </div>
+            <a class="button" href="{% url 'web-profile-add' %}">Add profile</a>
+        </div>
+        <section class="metrics" aria-label="Profile totals">
+            <article class="metric">
+                <span class="metric-label">All profiles</span>
+                <strong class="metric-value">{{ total_profiles }}</strong>
+            </article>
+            <article class="metric pending">
+                <span class="metric-label">Awaiting review</span>
+                <strong class="metric-value">{{ pending_review_count }}</strong>
+            </article>
+            <article class="metric approved">
+                <span class="metric-label">Approved</span>
+                <strong class="metric-value">{{ approved_count }}</strong>
+            </article>
+            <article class="metric">
+                <span class="metric-label">Drafts</span>
+                <strong class="metric-value">{{ draft_count }}</strong>
+            </article>
+        </section>
+        <section class="section" aria-labelledby="recent-heading">
+            <div class="section-heading">
+                <h2 id="recent-heading">Recently added</h2>
+                <a href="{% url 'web-profile-list' %}">View all</a>
+            </div>
+            {% if recent_profiles %}
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr><th>Profile</th><th>Profession</th><th>Gender</th><th>Status</th><th>Added</th></tr>
+                        </thead>
+                        <tbody>
+                            {% for profile in recent_profiles %}
+                                <tr>
+                                    <td><span class="profile-name">{{ profile.full_name }}</span><br><span class="code">{{ profile.profile_code }}</span></td>
+                                    <td>{{ profile.profession|default:"Not specified" }}</td>
+                                    <td>{{ profile.get_gender_display|default:"Not specified" }}</td>
+                                    <td><span class="status status-{{ profile.status|lower }}">{{ profile.get_status_display }}</span></td>
+                                    <td>{{ profile.created_at|date:"M j, Y" }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="empty">No profiles yet. Add the first profile to get started.</p>
+            {% endif %}
+        </section>
+{% endblock %}
