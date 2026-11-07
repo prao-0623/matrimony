@@ -67,7 +67,10 @@ def profile_create(request):
     if request.method == 'POST' and form.is_valid():
         profile = form.save(commit=False)
         profile.created_by = request.user
-        profile.created_by_name = request.user.get_full_name().strip() or request.user.email
+        creator_name = request.user.get_full_name().strip() or request.user.email
+        profile.created_by_name = creator_name
+        profile.updated_by = request.user
+        profile.updated_by_name = creator_name
         profile.save()
         _save_gallery_images(form, profile)
         messages.success(request, f'{profile.full_name} was added.')
@@ -90,6 +93,9 @@ def profile_edit(request, pk):
     form = ProfileForm(request.POST or None, request.FILES or None, instance=profile)
     if request.method == 'POST' and form.is_valid():
         profile = form.save()
+        profile.updated_by = request.user
+        profile.updated_by_name = request.user.get_full_name().strip() or request.user.email
+        profile.save(update_fields=['updated_by', 'updated_by_name'])
         _save_gallery_images(form, profile)
         messages.success(request, f'{profile.full_name} was updated.')
         return redirect('web-profile-list')

@@ -1,5 +1,7 @@
 import { getImageUrl, getInitials } from '../utils/media';
 
+const formatTimestamp = (value) => value ? new Date(value).toLocaleString() : '—';
+
 export default function ProfileDetailCard({ profile, onBack, onEdit }) {
   const primaryPhoto = getImageUrl(profile?.primary_photo_url || profile?.primary_photo);
   const galleryImages = Array.isArray(profile?.gallery_images) ? profile.gallery_images.map((image) => getImageUrl(image?.image_url || image?.image)).filter(Boolean) : [];
@@ -19,6 +21,10 @@ export default function ProfileDetailCard({ profile, onBack, onEdit }) {
     { label: 'Marital status', value: profile?.marital_status || '—' },
     { label: 'Mother tongue', value: profile?.mother_tongue || '—' },
     { label: 'Status', value: profile?.status || 'DRAFT' },
+    { label: 'Created by', value: profile?.created_by_name || 'Unknown' },
+    { label: 'Created at', value: formatTimestamp(profile?.created_at) },
+    { label: 'Last updated by', value: profile?.updated_by_name || 'Unknown' },
+    { label: 'Last updated at', value: formatTimestamp(profile?.updated_at) },
   ];
 
   return (

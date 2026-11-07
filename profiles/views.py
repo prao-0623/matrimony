@@ -19,9 +19,19 @@ class ProfileViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         creator = self.request.user
+        creator_name = creator.get_full_name().strip() or creator.email
         serializer.save(
             created_by=creator,
-            created_by_name=creator.get_full_name().strip() or creator.email,
+            created_by_name=creator_name,
+            updated_by=creator,
+            updated_by_name=creator_name,
+        )
+
+    def perform_update(self, serializer):
+        updater = self.request.user
+        serializer.save(
+            updated_by=updater,
+            updated_by_name=updater.get_full_name().strip() or updater.email,
         )
 
     def destroy(self, request, *args, **kwargs):

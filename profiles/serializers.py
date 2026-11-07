@@ -58,11 +58,21 @@ class ProfileSerializer(serializers.ModelSerializer):
             'consent_at',
             'created_by_name',
             'created_by',
+            'updated_by_name',
+            'updated_by',
             'assigned_to',
             'created_at',
             'updated_at',
         ]
-        read_only_fields = ['id', 'created_by_name', 'created_by', 'created_at', 'updated_at']
+        read_only_fields = [
+            'id',
+            'created_by_name',
+            'created_by',
+            'updated_by_name',
+            'updated_by',
+            'created_at',
+            'updated_at',
+        ]
 
     def get_primary_photo_url(self, obj):
         if obj.primary_photo:

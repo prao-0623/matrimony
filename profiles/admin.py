@@ -19,7 +19,16 @@ class ProfileAdmin(admin.ModelAdmin):
     list_display = ('profile_code', 'full_name', 'profession', 'status', 'gender', 'created_at')
     list_filter = ('status', 'gender', 'marital_status', 'income_range', 'consent_status')
     search_fields = ('profile_code', 'full_name', 'profession', 'mother_tongue')
-    readonly_fields = ('created_by', 'created_at', 'updated_at', 'archived_at', 'archived_by')
+    readonly_fields = (
+        'created_by',
+        'created_by_name',
+        'updated_by',
+        'updated_by_name',
+        'created_at',
+        'updated_at',
+        'archived_at',
+        'archived_by',
+    )
     ordering = ('-created_at',)
 
     def _can_manage_profiles(self, request):
@@ -48,4 +57,7 @@ class ProfileAdmin(admin.ModelAdmin):
     def save_model(self, request, obj, form, change):
         if not change and obj.created_by_id is None:
             obj.created_by = request.user
+            obj.created_by_name = request.user.get_full_name().strip() or request.user.email
+        obj.updated_by = request.user
+        obj.updated_by_name = request.user.get_full_name().strip() or request.user.email
         super().save_model(request, obj, form, change)

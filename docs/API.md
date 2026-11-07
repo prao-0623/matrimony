@@ -239,6 +239,8 @@ Example response (illustrative values):
   "consent_at": null,
   "created_by_name": "admin@example.com",
   "created_by": "<staff-uuid>",
+  "updated_by_name": "admin@example.com",
+  "updated_by": "<staff-uuid>",
   "assigned_to": null,
   "created_at": "2026-11-06T10:00:00Z",
   "updated_at": "2026-11-06T10:00:00Z"
@@ -282,7 +284,8 @@ Archive without deleting using `{"status": "ARCHIVED"}`. This changes status onl
 | `additional_photos` | Write-only list of image uploads, appended to gallery |
 | `gallery_images` | Read-only image objects: `id`, `image`, `image_url`, `is_primary`, `caption`, `created_at` |
 | `id`, `age`, `primary_photo_url` | Read-only UUID, calculated age (or null), and photo URL (or empty string) |
-| `created_by`, `created_by_name` | Read-only creator UUID (possibly null) and saved creator name/email |
+| `created_by`, `created_by_name` | Read-only creator UUID (possibly null) and saved creator name/email; the name remains if the staff account is deleted |
+| `updated_by`, `updated_by_name` | Read-only last-updater UUID (possibly null) and saved updater name/email; updated on each create or edit, and the name remains if the staff account is deleted |
 | `created_at`, `updated_at` | Read-only ISO 8601 timestamps |
 
 Income choices: `BELOW_3_LPA`, `3_TO_5_LPA`, `5_TO_10_LPA`, `10_TO_20_LPA`, `20_TO_50_LPA`, `ABOVE_50_LPA`, `PREFER_NOT_TO_SAY`. LPA means lakh INR per year.

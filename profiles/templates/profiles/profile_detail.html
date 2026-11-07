@@ -102,6 +102,14 @@
                 <span class="detail-label" style="display:block; color:#64746e; font-size:12px; font-weight:700; letter-spacing:.08em; text-transform:uppercase;">Created by</span>
                 <span style="display:block; margin-top:4px; font-size:16px;">{{ profile.created_by_name|default:'Unknown' }}</span>
             </div>
+            <div class="detail-row" style="padding:16px 20px; border-bottom:1px solid #edf1ee; border-left:1px solid #edf1ee;">
+                <span class="detail-label" style="display:block; color:#64746e; font-size:12px; font-weight:700; letter-spacing:.08em; text-transform:uppercase;">Last updated</span>
+                <span style="display:block; margin-top:4px; font-size:16px;">{{ profile.updated_at|date:'d M, Y H:i' }}</span>
+            </div>
+            <div class="detail-row" style="padding:16px 20px; border-bottom:1px solid #edf1ee;">
+                <span class="detail-label" style="display:block; color:#64746e; font-size:12px; font-weight:700; letter-spacing:.08em; text-transform:uppercase;">Last updated by</span>
+                <span style="display:block; margin-top:4px; font-size:16px;">{{ profile.updated_by_name|default:'Unknown' }}</span>
+            </div>
         </div>
 
         <div class="detail-row" style="padding:20px;">

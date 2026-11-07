@@ -86,6 +86,8 @@ class ProfileWebUITests(TestCase):
         self.assertRedirects(response, '/profiles/')
         self.assertEqual(profile.created_by, self.user)
         self.assertEqual(profile.created_by_name, self.user.email)
+        self.assertEqual(profile.updated_by, self.user)
+        self.assertEqual(profile.updated_by_name, self.user.email)
         self.assertEqual(profile.religion, 'Hindu')
         self.assertEqual(profile.caste, 'Example caste')
         today = date.today()
@@ -117,6 +119,8 @@ class ProfileWebUITests(TestCase):
         self.assertRedirects(response, '/profiles/')
         self.assertEqual(profile.full_name, 'Updated Candidate')
         self.assertEqual(profile.status, ProfileStatus.APPROVED)
+        self.assertEqual(profile.updated_by, self.user)
+        self.assertEqual(profile.updated_by_name, self.user.email)
 
     def test_website_rejects_negative_weight(self):
         response = self.client.post('/profiles/add/', {
@@ -138,12 +142,15 @@ class ProfileWebUITests(TestCase):
         })
         profile = Profile.objects.get(profile_code='P-2002')
         self.assertRedirects(response, '/profiles/')
+        self.assertEqual(profile.updated_by_name, self.user.email)
 
         self.user.delete()
         profile.refresh_from_db()
 
         self.assertIsNone(profile.created_by)
+        self.assertIsNone(profile.updated_by)
         self.assertEqual(profile.created_by_name, 'staff@example.com')
+        self.assertEqual(profile.updated_by_name, 'staff@example.com')
         viewer = StaffUser.objects.create_user(
             email='viewer@example.com',
             password='StrongPass123!',
@@ -300,6 +307,8 @@ class ProfileAPITests(APITestCase):
         self.assertEqual(create_response.status_code, status.HTTP_201_CREATED)
         profile_id = create_response.data['id']
         self.assertEqual(str(create_response.data['created_by']), str(self.user.pk))
+        self.assertEqual(create_response.data['created_by_name'], self.user.email)
+        self.assertEqual(create_response.data['updated_by_name'], self.user.email)
 
         list_response = self.client.get('/api/profiles/?search=API Candidate')
         self.assertEqual(list_response.status_code, status.HTTP_200_OK)
@@ -315,6 +324,8 @@ class ProfileAPITests(APITestCase):
         )
         self.assertEqual(patch_response.status_code, status.HTTP_200_OK)
         self.assertEqual(patch_response.data['profession'], 'Engineer')
+        self.assertEqual(patch_response.data['updated_by_name'], self.user.email)
+        self.assertEqual(str(patch_response.data['updated_by']), str(self.user.pk))
 
         invalid_weight_response = self.client.patch(
             f'/api/profiles/{profile_id}/',
